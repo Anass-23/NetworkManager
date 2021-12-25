@@ -1,0 +1,199 @@
+#+TITLE: NetworkManager guide (nmcli) 
+#+AUTHOR: Anass Anhari
+
+#+BEGIN_abstract
+This document contains the essential information for using
+*/_NetworkManager_/*, a basic instruction guide set for operating with
+*/nmcli/*.
+
+For fully detailed information, please see */man nmcli/*.
+#+END_abstract
+
+
+* connection
+** show
+** up
+** down
+** add
+** modify
+** clone
+** edit
+** delete
+** monitor
+** reload (reload all connection files from disk)
+** load <filename> (not internanlly on nmcli)
+** import [--temporary] type <type> file <file to import>
+** export [id | uuid | path] <ID> [<output file>]
+  
+
+* device
+** Show status for all devices   
+
+   #+BEGIN_SRC shell 
+   nmcli dev status
+   #+END_SRC
+
+   By default, the following columns are shown:
+
+   - DEVICE     - interface name
+   - TYPE       - device type
+   - STATE      - device state
+   - CONNECTION - connection activated on device (if any)
+   
+   |--------+----------+-----------+--------------------|
+   | DEVICE | TYPE     | STATE     | CONNECTION         |
+   |--------+----------+-----------+--------------------|
+   | ens33  | ethernet | connected | Wired connection 1 |
+   | lo     | loopback | unmanaged | --                 |
+   |--------+----------+-----------+--------------------|
+
+** Show details of device(s)
+
+   #+BEGIN_SRC shell 
+   nmcli dev show [<ifname>]
+   #+END_SRC
+
+   The command lists details for all devices, or for a given device.
+ 
+** Set device properties.
+   
+   #+BEGIN_SRC shell 
+   nmcli dev set [ifname] ifname [autoconnect {yes | no}]
+   nmcli dev set [ifname] ifname [managed {yes | no}]
+   #+END_SRC 
+     
+** Connect the device.
+
+   #+BEGIN_SRC shell 
+   nmcli dev connect [<ifname>]
+   #+END_SRC
+   
+   NetworkManager will try to find a suitable connection that will be
+   activated.
+   
+   It will also consider connections that are not set to
+   auto-connect. 
+
+** Disconnect the device
+   
+   #+BEGIN_SRC shell 
+   nmcli dev disconnect [<ifname>]
+   #+END_SRC
+   
+   The command disconnects the device and prevents it from
+   auto-activating further connections without user/manual
+   intervention. 
+   
+** Modify one or more properties on an active device
+   
+   Modify one or more properties currently active on the device without modifying
+   the connection profile. The changes have immediate effect. 
+
+   #+BEGIN_SRC shell 
+   nmcli dev delete [<ifname>]
+   #+END_SRC
+   
+   #+BEGIN_QUOTE
+   **_NOTE:_** The changes do not modify the connection profile!
+   #+END_QUOTE
+
+** Delete the software devices
+   
+   #+BEGIN_SRC shell 
+   nmcli dev delete [<ifname>]
+   #+END_SRC
+
+   The command removes the interfaces. It only works for software
+   devices like:
+   - Bonds
+   - Brigdes
+   - etc.
+     
+   #+BEGIN_QUOTE
+   **_NOTE:_** Hardware devices cannot be deleted by the command!
+   #+END_QUOTE
+   
+   
+** wifi
+
+
+* general
+** Show overall status of NetworkManager.
+
+   #+BEGIN_SRC shell 
+   nmcli gen status
+   #+END_SRC
+   
+   'status' is the default action, which means 'nmcli gen' calls
+   'nmcli gen status'
+
+# ** hostname [<hostname>]
+#    Get and change system hostname. With no arguments, this prints
+#    currently configured hostname. 
+   
+#    When you pass a hostname, it will be handed over to NetworkManager
+#    to be set as a new system hostname.
+   
+# ** permissions
+#    Show the permissions a caller has for various authenticated
+#    operations that NetworkManager provides, like enable and disable
+#    networking, changing Wi-Fi and WWAN state, modifying connections,
+#    etc.
+   
+# ** logging [level <log level>] [domains <log domains>]
+#    Get and change NetworkManager logging level and domains. Without
+#    any argument current logging level and domains are shown. 
+
+
+* networking
+** Switch networking on.
+
+   #+BEGIN_SRC shell 
+   nmcli net on
+   #+END_SRC
+
+** Switch networking off.
+
+   #+BEGIN_SRC shell 
+   nmcli net off
+   #+END_SRC
+
+** Get network connectivity state.
+   
+   #+BEGIN_SRC shell 
+   nmcli net connectivity [check]
+   #+END_SRC
+   
+   The optional *check* argument makes NetworkManager re-check the
+   connectivity.
+   
+   Possible states are:
+   + */_none:_/* The host is not connected to any network.
+
+   + */_portal:_/* The host is behind a captive portal and cannot reach the full Internet.
+
+   + */_limited:_/* The host is connected to a network, but it has no access to the Internet.
+
+   + */_full:_/* The host is connected to a network and has full access to the Internet.
+
+   + */_unknown:_/* The connectivity status cannot be found out.
+     
+
+* radio
+** Get status of *all* radio switches, or turn them on/off.
+
+    #+BEGIN_SRC shell 
+    nmcli radio all [on | off]
+    #+END_SRC
+
+** Get status of *Wi-Fi* radio switch, or turn it on/off.
+    
+    #+BEGIN_SRC shell 
+    nmcli radio wifi [on | off]
+    #+END_SRC
+
+** Get status of *mobile broadband* radio switch, or turn it on/off.
+
+    #+BEGIN_SRC shell 
+    nmcli radio wwan [on | off]
+    #+END_SRC
