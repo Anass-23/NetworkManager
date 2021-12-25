@@ -10,7 +10,7 @@ For fully detailed information, please see */man nmcli/*.
 #+END_abstract
 
 
-* connection
+* 1) connection
 ** show
 ** up
 ** down
@@ -26,7 +26,7 @@ For fully detailed information, please see */man nmcli/*.
 ** export [id | uuid | path] <ID> [<output file>]
   
 
-* device
+* 2) device
 ** Show status for all devices   
 
    #+BEGIN_SRC shell 
@@ -90,7 +90,7 @@ For fully detailed information, please see */man nmcli/*.
    the connection profile. The changes have immediate effect. 
 
    #+BEGIN_SRC shell 
-   nmcli dev delete [<ifname>]
+   nmcli dev modify <ifname> ([+|-]<setting>.<property> <value>)+
    #+END_SRC
    
    #+BEGIN_QUOTE
@@ -113,11 +113,77 @@ For fully detailed information, please see */man nmcli/*.
    **_NOTE:_** Hardware devices cannot be deleted by the command!
    #+END_QUOTE
    
+** Perform operation on Wi-Fi devices
    
-** wifi
+   - List available Wi-Fi access points
+     #+BEGIN_SRC shell 
+     nmcli dev wifi list [ifname <ifname>] [bssid <BSSID>] [--rescan yes|no|auto]
+     #+END_SRC
+     
+     The options 'ifname' and 'bssid' can be used for listing and
+     showing APs (access points) for a particular 'ifname'. 
 
+     The --rescan flag tells if a new scan should be done for listing
+     APs.
 
-* general
+   - Connect to a Wi-Fi network specified by SSID or BSSID
+     #+BEGIN_SRC shell 
+     sudo nmcli dev wifi connect connect <(B)SSID> [password <password>] [wep-key-type key|phrase] [ifname <ifname>]
+                     [bssid <BSSID>] [name <name>] [private yes|no] [hidden yes|no]
+     #+END_SRC
+     
+     The most common use would be:
+     #+BEGIN_SRC shell 
+     sudo nmcli dev wifi connect <"SSID"> password <"PASSWORD">
+     #+END_SRC
+     
+     And for security purposes, for not displaying the 'SSID' network
+     password we should run:
+     
+     #+BEGIN_SRC shell 
+     sudo nmcli --ask dev wifi connect <"SSID">
+     #+END_SRC
+
+   - Re-scan for available access points.
+     #+BEGIN_SRC shell 
+     nmcli dev wifi rescan [ifname <ifname>] [[ssid <SSID to scan>] ...]
+     #+END_SRC
+     
+     The option 'ssid' allows scanning for a specific SSID, which is
+     useful for APs with hidden SSIDs.
+     
+     #+BEGIN_QUOTE
+     **_NOTE:_** Performing a rescan would not show the APs!
+     #+END_QUOTE
+
+   
+   - Create a Wi-Fi hotspot
+     #+BEGIN_SRC shell 
+     nmcli dev wifi hotspot [ifname <ifname>] [con-name <name>] [ssid <SSID>]
+                     [band a|bg] [channel <channel>] [password <password>]
+     #+END_SRC
+        
+     Parameters:
+     + */_ifname:_/* Wi-Fi device to use
+     + */_con-name:_/* Hotspot connection profile name
+     + */_ssid:_/* SSID of the hotspot
+     + */_band:_/* Wi-Fi band to use
+     + */_channel:_/* Wi-Fi channel to use
+     + */_password:_/* Password for the hotspot
+
+     #+BEGIN_QUOTE
+     **_NOTE:_** Use 'connection down' or 'device disconnect' to stop
+       the hotspot.
+     #+END_QUOTE
+     
+
+   - Show a password of an interface
+     #+BEGIN_SRC shell 
+     nmcli dev wifi show-password <ifname>
+     #+END_SRC
+     
+
+* 3) general
 ** Show overall status of NetworkManager.
 
    #+BEGIN_SRC shell 
@@ -145,7 +211,7 @@ For fully detailed information, please see */man nmcli/*.
 #    any argument current logging level and domains are shown. 
 
 
-* networking
+* 4) networking
 ** Switch networking on.
 
    #+BEGIN_SRC shell 
@@ -179,7 +245,7 @@ For fully detailed information, please see */man nmcli/*.
    + */_unknown:_/* The connectivity status cannot be found out.
      
 
-* radio
+* 5) radio
 ** Get status of *all* radio switches, or turn them on/off.
 
     #+BEGIN_SRC shell 
