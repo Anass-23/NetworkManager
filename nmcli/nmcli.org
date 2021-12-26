@@ -11,23 +11,73 @@ For fully detailed information, please see */man nmcli/*.
 
 
 * 1) connection
-** show
-** up
-** down
-** add
-** modify
-** clone
-** edit
-** delete
-** monitor
-** reload (reload all connection files from disk)
-** load <filename> (not internanlly on nmcli)
-** import [--temporary] type <type> file <file to import>
-** export [id | uuid | path] <ID> [<output file>]
-  
+** Show details of connection profiles
+   #+BEGIN_SRC shell 
+   nmcli con show [--active, --show-secrets] [id | uuid | path] <ID>
+   #+END_SRC
+
+   The flag '--active' will only show the profiles of the current
+   active profiles.
+
+   For displaying also the associated secrets use the '--show-secrets'
+   option.
+
+** Up, activate a connection on a device
+   
+   #+BEGIN_SRC shell 
+   nmcli con up ifname <ifname> [ap <BSSID>] [nsp <name>] [passwd-file <file with passwords>]
+   #+END_SRC
+   
+** Down, deactivate a connection from a device 
+   
+   #+BEGIN_SRC shell 
+   nmcli con down [id | uuid | path | apath] <ID>
+   #+END_SRC
+
+** Add a new connection profile
+   
+   
+
+** Modify one or more properties of a connection profile
+   
+   #+BEGIN_SRC shell 
+   nmcli con modify [id | uuid | path] <ID> ([+|-]<setting>.<property> <value>)+
+   #+END_SRC
+
+** Clone an existing connection profile
+   
+   #+BEGIN_SRC shell 
+   nmcli con clone [--temporary] [id | uuid | path] <ID> <new name>
+   #+END_SRC
+   
+** Delete a connection profile
+   
+   #+BEGIN_SRC shell 
+   nmcli con delete [id | uuid | path] <ID>
+   #+END_SRC
+   
+** Reload all connection files from disk
+   
+   #+BEGIN_SRC shell 
+   nmcli con reload
+   #+END_SRC
+   
+** Load or reload one or more connection files from disk.
+   
+   #+BEGIN_SRC shell 
+   nmcli con load <filename>
+   #+END_SRC
+   
 
 * 2) device
-** Show status for all devices   
+** Show details of device(s)
+
+   #+BEGIN_SRC shell 
+   nmcli dev show [<ifname>]
+   #+END_SRC
+
+   The command lists details for all devices, or for a given device.
+** Status for all devices
 
    #+BEGIN_SRC shell 
    nmcli dev status
@@ -46,14 +96,6 @@ For fully detailed information, please see */man nmcli/*.
    | ens33  | ethernet | connected | Wired connection 1 |
    | lo     | loopback | unmanaged | --                 |
    |--------+----------+-----------+--------------------|
-
-** Show details of device(s)
-
-   #+BEGIN_SRC shell 
-   nmcli dev show [<ifname>]
-   #+END_SRC
-
-   The command lists details for all devices, or for a given device.
  
 ** Set device properties.
    

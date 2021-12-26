@@ -1,39 +1,36 @@
 
 # Table of Contents
 
-1.  [1) connection](#orgf459d32)
-    1.  [show](#org8bedf17)
-    2.  [up](#orgbdb03fa)
-    3.  [down](#org53b2218)
-    4.  [add](#org1e7de75)
-    5.  [modify](#orge9c8827)
-    6.  [clone](#org7a65272)
-    7.  [edit](#orgb6b7767)
-    8.  [delete](#orga449276)
-    9.  [monitor](#orgcde77ca)
-    10. [reload (reload all connection files from disk)](#org0e02e87)
-    11. [load <filename> (not internanlly on nmcli)](#org537e188)
-    12. [import [&#x2013;temporary] type <type> file <file to import>](#org92331ca)
-    13. [export [id | uuid | path] <ID> [<output file>]](#orgac13bcc)
-2.  [2) device](#org876e7f0)
-    1.  [Show status for all devices](#org9f98a41)
-    2.  [Show details of device(s)](#orgb825339)
-    3.  [Set device properties.](#org7f97af1)
-    4.  [Connect the device.](#org0207bf2)
-    5.  [Disconnect the device](#orgea3bc6e)
-    6.  [Modify one or more properties on an active device](#org3ea0c17)
-    7.  [Delete the software devices](#org53d718a)
-    8.  [Perform operation on Wi-Fi devices](#orgaca22ad)
-3.  [3) general](#org01006c1)
-    1.  [Show overall status of NetworkManager.](#org9143184)
-4.  [4) networking](#orgb08ddc0)
-    1.  [Switch networking on.](#orgf3a5d0e)
-    2.  [Switch networking off.](#orgb0bd871)
-    3.  [Get network connectivity state.](#orgd2e52b1)
-5.  [5) radio](#org6a306f7)
-    1.  [Get status of **all** radio switches, or turn them on/off.](#orgc67e997)
-    2.  [Get status of **Wi-Fi** radio switch, or turn it on/off.](#org03ee1b3)
-    3.  [Get status of **mobile broadband** radio switch, or turn it on/off.](#orgc278177)
+- [Table of Contents](#table-of-contents)
+- [1) connection](#1-connection)
+  - [Show details of connection profiles](#show-details-of-connection-profiles)
+  - [Up, activate a connection on a device](#up-activate-a-connection-on-a-device)
+  - [Down, deactivate a connection from a device](#down-deactivate-a-connection-from-a-device)
+  - [Add a new connection profile](#add-a-new-connection-profile)
+  - [Modify one or more properties of a connection profile](#modify-one-or-more-properties-of-a-connection-profile)
+  - [Clone an existing connection profile](#clone-an-existing-connection-profile)
+  - [Delete a connection profile](#delete-a-connection-profile)
+  - [Reload all connection files from disk](#reload-all-connection-files-from-disk)
+  - [Load or reload one or more connection files from disk.](#load-or-reload-one-or-more-connection-files-from-disk)
+- [2) device](#2-device)
+  - [Show details of device(s)](#show-details-of-devices)
+  - [Status for all devices](#status-for-all-devices)
+  - [Set device properties.](#set-device-properties)
+  - [Connect the device.](#connect-the-device)
+  - [Disconnect the device](#disconnect-the-device)
+  - [Modify one or more properties on an active device](#modify-one-or-more-properties-on-an-active-device)
+  - [Delete the software devices](#delete-the-software-devices)
+  - [Perform operation on Wi-Fi devices](#perform-operation-on-wi-fi-devices)
+- [3) general](#3-general)
+  - [Show overall status of NetworkManager.](#show-overall-status-of-networkmanager)
+- [4) networking](#4-networking)
+  - [Switch networking on.](#switch-networking-on)
+  - [Switch networking off.](#switch-networking-off)
+  - [Get network connectivity state.](#get-network-connectivity-state)
+- [5) radio](#5-radio)
+  - [Get status of **all** radio switches, or turn them on/off.](#get-status-of-all-radio-switches-or-turn-them-onoff)
+  - [Get status of **Wi-Fi** radio switch, or turn it on/off.](#get-status-of-wi-fi-radio-switch-or-turn-it-onoff)
+  - [Get status of **mobile broadband** radio switch, or turn it on/off.](#get-status-of-mobile-broadband-radio-switch-or-turn-it-onoff)
 
 <div class="abstract">
 This document contains the essential information for using
@@ -45,84 +42,95 @@ For fully detailed information, please see ***man nmcli***.
 </div>
 
 
-<a id="orgf459d32"></a>
+<a id="org2f65c41"></a>
 
 # 1) connection
 
 
-<a id="org8bedf17"></a>
+<a id="org4f4b284"></a>
 
-## show
+## Show details of connection profiles
 
+    nmcli con show [--active, --show-secrets] [id | uuid | path] <ID>
 
-<a id="orgbdb03fa"></a>
+The flag '&#x2013;active' will only show the profiles of the current
+active profiles.
 
-## up
-
-
-<a id="org53b2218"></a>
-
-## down
+For displaying also the associated secrets use the '&#x2013;show-secrets'
+option.
 
 
-<a id="org1e7de75"></a>
+<a id="orgdc30008"></a>
 
-## add
+## Up, activate a connection on a device
 
-
-<a id="orge9c8827"></a>
-
-## modify
+    nmcli con up ifname <ifname> [ap <BSSID>] [nsp <name>] [passwd-file <file with passwords>]
 
 
-<a id="org7a65272"></a>
+<a id="org52f4a5b"></a>
 
-## clone
+## Down, deactivate a connection from a device
 
-
-<a id="orgb6b7767"></a>
-
-## edit
+    nmcli con down [id | uuid | path | apath] <ID>
 
 
-<a id="orga449276"></a>
+<a id="org5669dd5"></a>
 
-## delete
-
-
-<a id="orgcde77ca"></a>
-
-## monitor
+## Add a new connection profile
 
 
-<a id="org0e02e87"></a>
+<a id="org98313e2"></a>
 
-## reload (reload all connection files from disk)
+## Modify one or more properties of a connection profile
 
-
-<a id="org537e188"></a>
-
-## load <filename> (not internanlly on nmcli)
+    nmcli con modify [id | uuid | path] <ID> ([+|-]<setting>.<property> <value>)+
 
 
-<a id="org92331ca"></a>
+<a id="orgaff9775"></a>
 
-## import [&#x2013;temporary] type <type> file <file to import>
+## Clone an existing connection profile
 
-
-<a id="orgac13bcc"></a>
-
-## export [id | uuid | path] <ID> [<output file>]
+    nmcli con clone [--temporary] [id | uuid | path] <ID> <new name>
 
 
-<a id="org876e7f0"></a>
+<a id="org14b2615"></a>
+
+## Delete a connection profile
+
+    nmcli con delete [id | uuid | path] <ID>
+
+
+<a id="orgbb9d479"></a>
+
+## Reload all connection files from disk
+
+    nmcli con reload
+
+
+<a id="orga87b878"></a>
+
+## Load or reload one or more connection files from disk.
+
+    nmcli con load <filename>
+
+
+<a id="org2621cae"></a>
 
 # 2) device
 
 
-<a id="org9f98a41"></a>
+<a id="org6430a44"></a>
 
-## Show status for all devices
+## Show details of device(s)
+
+    nmcli dev show [<ifname>]
+
+The command lists details for all devices, or for a given device.
+
+
+<a id="orgf39a0e4"></a>
+
+## Status for all devices
 
     nmcli dev status
 
@@ -173,16 +181,7 @@ By default, the following columns are shown:
 </table>
 
 
-<a id="orgb825339"></a>
-
-## Show details of device(s)
-
-    nmcli dev show [<ifname>]
-
-The command lists details for all devices, or for a given device.
-
-
-<a id="org7f97af1"></a>
+<a id="org0ee6905"></a>
 
 ## Set device properties.
 
@@ -190,7 +189,7 @@ The command lists details for all devices, or for a given device.
     nmcli dev set [ifname] ifname [managed {yes | no}]
 
 
-<a id="org0207bf2"></a>
+<a id="org69f9aa3"></a>
 
 ## Connect the device.
 
@@ -203,7 +202,7 @@ It will also consider connections that are not set to
 auto-connect. 
 
 
-<a id="orgea3bc6e"></a>
+<a id="org23ed6a9"></a>
 
 ## Disconnect the device
 
@@ -214,7 +213,7 @@ auto-activating further connections without user/manual
 intervention. 
 
 
-<a id="org3ea0c17"></a>
+<a id="org8d54568"></a>
 
 ## Modify one or more properties on an active device
 
@@ -226,7 +225,7 @@ the connection profile. The changes have immediate effect.
 > ****<span class="underline">NOTE:</span>**** The changes do not modify the connection profile!
 
 
-<a id="org53d718a"></a>
+<a id="org0e1e6be"></a>
 
 ## Delete the software devices
 
@@ -242,7 +241,7 @@ devices like:
 > ****<span class="underline">NOTE:</span>**** Hardware devices cannot be deleted by the command!
 
 
-<a id="orgaca22ad"></a>
+<a id="orgc256782"></a>
 
 ## Perform operation on Wi-Fi devices
 
@@ -301,12 +300,12 @@ devices like:
         nmcli dev wifi show-password <ifname>
 
 
-<a id="org01006c1"></a>
+<a id="org3c92b97"></a>
 
 # 3) general
 
 
-<a id="org9143184"></a>
+<a id="org47550a0"></a>
 
 ## Show overall status of NetworkManager.
 
@@ -316,26 +315,26 @@ devices like:
 'nmcli gen status'
 
 
-<a id="orgb08ddc0"></a>
+<a id="org63d3805"></a>
 
 # 4) networking
 
 
-<a id="orgf3a5d0e"></a>
+<a id="org4787862"></a>
 
 ## Switch networking on.
 
     nmcli net on
 
 
-<a id="orgb0bd871"></a>
+<a id="org0e5de5c"></a>
 
 ## Switch networking off.
 
     nmcli net off
 
 
-<a id="orgd2e52b1"></a>
+<a id="orgccd248d"></a>
 
 ## Get network connectivity state.
 
@@ -357,26 +356,26 @@ Possible states are:
 -   ***<span class="underline">unknown:</span>*** The connectivity status cannot be found out.
 
 
-<a id="org6a306f7"></a>
+<a id="org84b5f2c"></a>
 
 # 5) radio
 
 
-<a id="orgc67e997"></a>
+<a id="org247bfbd"></a>
 
 ## Get status of **all** radio switches, or turn them on/off.
 
     nmcli radio all [on | off]
 
 
-<a id="org03ee1b3"></a>
+<a id="orgde912c1"></a>
 
 ## Get status of **Wi-Fi** radio switch, or turn it on/off.
 
     nmcli radio wifi [on | off]
 
 
-<a id="orgc278177"></a>
+<a id="orgac2f503"></a>
 
 ## Get status of **mobile broadband** radio switch, or turn it on/off.
 
