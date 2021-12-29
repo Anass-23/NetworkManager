@@ -36,8 +36,63 @@ For fully detailed information, please see */man nmcli/*.
 
 ** Add a new connection profile
    
-   
+   This option is crucial since we manually define an entire
+   profile for an interface. 
 
+   The basic interfaces we'll be defining are
+
+   - Ethernet profiles
+   - Wi-Fi profiles
+   - Bridge (master device) profiles
+   - Bridge Slaves (slave devices) profiles
+   
+   By adding a new connection profile we can define many properties
+   (everything on the man page) as the IPv4 addresses and gateways,
+   automatic addresses (from the DHCP) for dynamic IPs or static IPs
+   with manual configuration, we can define the DNS configuration, and
+   so on.
+   
+   Basic properties:
+
+   1) **con-name**: The connection profile name
+   2) **ifname**: The interface name where the profile will be applied
+   3) **type**: The type of profile (ethernet, wifi, bridge,
+      bridge-slave, ...)
+   4) **ipv4.addresses (or ip4)**: The IPv4 address
+   5) **ipv4.gateway (or gw4)**: The IPv4 gateway adress
+   6) **ssid**: The SSID of a network (also if it is hidden)
+   7) **wifi-sec.key-mgmt**: The key management as wpa-psk
+      (preshared-key), wpa-eap, ...
+   8) **wifi-sec.psk**: The SSID preshared key (the "password" of the
+      wifi network)
+   
+   Examples:
+
+   - Define a ethernet profile
+     
+     #+BEGIN_SRC shell 
+     nmcli con add con-name ethProfile ifname eth0 type ethernet ip4 192.168.1.14/24 gw4 192.168.1.1
+     #+END_SRC
+   
+   - Define a wifi profile
+
+     #+BEGIN_SRC shell 
+     nmcli con add con-name wifiProfile ifname wl0 type wifi ip4 192.168.1.14/24 gw4 192.168.1.1 ssid "MiFibra-5C60" wifi-sec.key-mgmt wpa-psk wifi-sec.psk "password"
+     #+END_SRC
+
+   - Define a bridge profile
+
+     #+BEGIN_SRC shell 
+     nmcli con add con-name myBridge type bridge ip4 192.168.1.14/24 gw4 192.168.1.1
+     #+END_SRC
+
+   - Define a bridge-slave profile
+
+     #+BEGIN_SRC shell 
+     nmcli con add con-name brSlave type bridge-slave ifname eth0 master myBridge
+     #+END_SRC
+
+   
 ** Modify one or more properties of a connection profile
    
    #+BEGIN_SRC shell 
@@ -82,7 +137,7 @@ For fully detailed information, please see */man nmcli/*.
    #+BEGIN_SRC shell 
    nmcli dev status
    #+END_SRC
-
+   
    By default, the following columns are shown:
 
    - DEVICE     - interface name
@@ -228,12 +283,19 @@ For fully detailed information, please see */man nmcli/*.
 * 3) general
 ** Show overall status of NetworkManager.
 
+   We can check the status by doing:
+
    #+BEGIN_SRC shell 
    nmcli gen status
    #+END_SRC
    
-   'status' is the default action, which means 'nmcli gen' calls
-   'nmcli gen status'
+   Or also:
+   #+BEGIN_SRC shell 
+   nmcli gen
+   #+END_SRC
+   
+
+   
 
 # ** hostname [<hostname>]
 #    Get and change system hostname. With no arguments, this prints

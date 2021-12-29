@@ -1,36 +1,35 @@
 
 # Table of Contents
 
-- [Table of Contents](#table-of-contents)
-- [1) connection](#1-connection)
-  - [Show details of connection profiles](#show-details-of-connection-profiles)
-  - [Up, activate a connection on a device](#up-activate-a-connection-on-a-device)
-  - [Down, deactivate a connection from a device](#down-deactivate-a-connection-from-a-device)
-  - [Add a new connection profile](#add-a-new-connection-profile)
-  - [Modify one or more properties of a connection profile](#modify-one-or-more-properties-of-a-connection-profile)
-  - [Clone an existing connection profile](#clone-an-existing-connection-profile)
-  - [Delete a connection profile](#delete-a-connection-profile)
-  - [Reload all connection files from disk](#reload-all-connection-files-from-disk)
-  - [Load or reload one or more connection files from disk.](#load-or-reload-one-or-more-connection-files-from-disk)
-- [2) device](#2-device)
-  - [Show details of device(s)](#show-details-of-devices)
-  - [Status for all devices](#status-for-all-devices)
-  - [Set device properties.](#set-device-properties)
-  - [Connect the device.](#connect-the-device)
-  - [Disconnect the device](#disconnect-the-device)
-  - [Modify one or more properties on an active device](#modify-one-or-more-properties-on-an-active-device)
-  - [Delete the software devices](#delete-the-software-devices)
-  - [Perform operation on Wi-Fi devices](#perform-operation-on-wi-fi-devices)
-- [3) general](#3-general)
-  - [Show overall status of NetworkManager.](#show-overall-status-of-networkmanager)
-- [4) networking](#4-networking)
-  - [Switch networking on.](#switch-networking-on)
-  - [Switch networking off.](#switch-networking-off)
-  - [Get network connectivity state.](#get-network-connectivity-state)
-- [5) radio](#5-radio)
-  - [Get status of **all** radio switches, or turn them on/off.](#get-status-of-all-radio-switches-or-turn-them-onoff)
-  - [Get status of **Wi-Fi** radio switch, or turn it on/off.](#get-status-of-wi-fi-radio-switch-or-turn-it-onoff)
-  - [Get status of **mobile broadband** radio switch, or turn it on/off.](#get-status-of-mobile-broadband-radio-switch-or-turn-it-onoff)
+1.  [1) connection](#orga5369cc)
+    1.  [Show details of connection profiles](#org7290036)
+    2.  [Up, activate a connection on a device](#orgcfcafd4)
+    3.  [Down, deactivate a connection from a device](#org8c534f3)
+    4.  [Add a new connection profile](#org6a088a1)
+    5.  [Modify one or more properties of a connection profile](#org1d36e57)
+    6.  [Clone an existing connection profile](#org18cac42)
+    7.  [Delete a connection profile](#orgf383cd9)
+    8.  [Reload all connection files from disk](#org9aa0180)
+    9.  [Load or reload one or more connection files from disk.](#orge80d9e6)
+2.  [2) device](#org987d163)
+    1.  [Show details of device(s)](#org445b7c7)
+    2.  [Status for all devices](#orgb177798)
+    3.  [Set device properties.](#org012e156)
+    4.  [Connect the device.](#org015dfad)
+    5.  [Disconnect the device](#org51311aa)
+    6.  [Modify one or more properties on an active device](#org108daf3)
+    7.  [Delete the software devices](#org46728ad)
+    8.  [Perform operation on Wi-Fi devices](#org52a9e5c)
+3.  [3) general](#org03ad232)
+    1.  [Show overall status of NetworkManager.](#org4af237a)
+4.  [4) networking](#org9413e79)
+    1.  [Switch networking on.](#org7a79d71)
+    2.  [Switch networking off.](#orgc0c9833)
+    3.  [Get network connectivity state.](#org239c442)
+5.  [5) radio](#orgd11ed78)
+    1.  [Get status of **all** radio switches, or turn them on/off.](#org2f66c44)
+    2.  [Get status of **Wi-Fi** radio switch, or turn it on/off.](#org47ddf24)
+    3.  [Get status of **mobile broadband** radio switch, or turn it on/off.](#orgec15be4)
 
 <div class="abstract">
 This document contains the essential information for using
@@ -42,12 +41,12 @@ For fully detailed information, please see ***man nmcli***.
 </div>
 
 
-<a id="org2f65c41"></a>
+<a id="orga5369cc"></a>
 
 # 1) connection
 
 
-<a id="org4f4b284"></a>
+<a id="org7290036"></a>
 
 ## Show details of connection profiles
 
@@ -60,66 +59,114 @@ For displaying also the associated secrets use the '&#x2013;show-secrets'
 option.
 
 
-<a id="orgdc30008"></a>
+<a id="orgcfcafd4"></a>
 
 ## Up, activate a connection on a device
 
     nmcli con up ifname <ifname> [ap <BSSID>] [nsp <name>] [passwd-file <file with passwords>]
 
 
-<a id="org52f4a5b"></a>
+<a id="org8c534f3"></a>
 
 ## Down, deactivate a connection from a device
 
     nmcli con down [id | uuid | path | apath] <ID>
 
 
-<a id="org5669dd5"></a>
+<a id="org6a088a1"></a>
 
 ## Add a new connection profile
 
+This option is crucial since we manually define an entire
+profile for an interface. 
 
-<a id="org98313e2"></a>
+The basic interfaces we'll be defining are
+
+-   Ethernet profiles
+-   Wi-Fi profiles
+-   Bridge (master device) profiles
+-   Bridge Slaves (slave devices) profiles
+
+By adding a new connection profile we can define many properties
+(everything on the man page) as the IPv4 addresses and gateways,
+automatic addresses (from the DHCP) for dynamic IPs or static IPs
+with manual configuration, we can define the DNS configuration, and
+so on.
+
+Basic properties:
+
+1.  ****con-name****: The connection profile name
+2.  ****ifname****: The interface name where the profile will be applied
+3.  ****type****: The type of profile (ethernet, wifi, bridge,
+    bridge-slave, &#x2026;)
+4.  ****ipv4.addresses (or ip4)****: The IPv4 address
+5.  ****ipv4.gateway (or gw4)****: The IPv4 gateway adress
+6.  ****ssid****: The SSID of a network (also if it is hidden)
+7.  ****wifi-sec.key-mgmt****: The key management as wpa-psk
+    (preshared-key), wpa-eap, &#x2026;
+8.  ****wifi-sec.psk****: The SSID preshared key (the "password" of the
+    wifi network)
+
+Examples:
+
+-   Define a ethernet profile
+    
+        nmcli con add con-name ethProfile ifname eth0 type ethernet ip4 192.168.1.14/24 gw4 192.168.1.1
+
+-   Define a wifi profile
+    
+        nmcli con add con-name wifiProfile ifname wl0 type wifi ip4 192.168.1.14/24 gw4 192.168.1.1 ssid "MiFibra-5C60" wifi-sec.key-mgmt wpa-psk wifi-sec.psk "password"
+
+-   Define a bridge profile
+    
+        nmcli con add con-name myBridge type bridge ip4 192.168.1.14/24 gw4 192.168.1.1
+
+-   Define a bridge-slave profile
+    
+        nmcli con add con-name brSlave type bridge-slave ifname eth0 master myBridge
+
+
+<a id="org1d36e57"></a>
 
 ## Modify one or more properties of a connection profile
 
     nmcli con modify [id | uuid | path] <ID> ([+|-]<setting>.<property> <value>)+
 
 
-<a id="orgaff9775"></a>
+<a id="org18cac42"></a>
 
 ## Clone an existing connection profile
 
     nmcli con clone [--temporary] [id | uuid | path] <ID> <new name>
 
 
-<a id="org14b2615"></a>
+<a id="orgf383cd9"></a>
 
 ## Delete a connection profile
 
     nmcli con delete [id | uuid | path] <ID>
 
 
-<a id="orgbb9d479"></a>
+<a id="org9aa0180"></a>
 
 ## Reload all connection files from disk
 
     nmcli con reload
 
 
-<a id="orga87b878"></a>
+<a id="orge80d9e6"></a>
 
 ## Load or reload one or more connection files from disk.
 
     nmcli con load <filename>
 
 
-<a id="org2621cae"></a>
+<a id="org987d163"></a>
 
 # 2) device
 
 
-<a id="org6430a44"></a>
+<a id="org445b7c7"></a>
 
 ## Show details of device(s)
 
@@ -128,7 +175,7 @@ option.
 The command lists details for all devices, or for a given device.
 
 
-<a id="orgf39a0e4"></a>
+<a id="orgb177798"></a>
 
 ## Status for all devices
 
@@ -181,7 +228,7 @@ By default, the following columns are shown:
 </table>
 
 
-<a id="org0ee6905"></a>
+<a id="org012e156"></a>
 
 ## Set device properties.
 
@@ -189,7 +236,7 @@ By default, the following columns are shown:
     nmcli dev set [ifname] ifname [managed {yes | no}]
 
 
-<a id="org69f9aa3"></a>
+<a id="org015dfad"></a>
 
 ## Connect the device.
 
@@ -202,7 +249,7 @@ It will also consider connections that are not set to
 auto-connect. 
 
 
-<a id="org23ed6a9"></a>
+<a id="org51311aa"></a>
 
 ## Disconnect the device
 
@@ -213,7 +260,7 @@ auto-activating further connections without user/manual
 intervention. 
 
 
-<a id="org8d54568"></a>
+<a id="org108daf3"></a>
 
 ## Modify one or more properties on an active device
 
@@ -225,7 +272,7 @@ the connection profile. The changes have immediate effect.
 > ****<span class="underline">NOTE:</span>**** The changes do not modify the connection profile!
 
 
-<a id="org0e1e6be"></a>
+<a id="org46728ad"></a>
 
 ## Delete the software devices
 
@@ -241,7 +288,7 @@ devices like:
 > ****<span class="underline">NOTE:</span>**** Hardware devices cannot be deleted by the command!
 
 
-<a id="orgc256782"></a>
+<a id="org52a9e5c"></a>
 
 ## Perform operation on Wi-Fi devices
 
@@ -300,41 +347,44 @@ devices like:
         nmcli dev wifi show-password <ifname>
 
 
-<a id="org3c92b97"></a>
+<a id="org03ad232"></a>
 
 # 3) general
 
 
-<a id="org47550a0"></a>
+<a id="org4af237a"></a>
 
 ## Show overall status of NetworkManager.
 
+We can check the status by doing:
+
     nmcli gen status
 
-'status' is the default action, which means 'nmcli gen' calls
-'nmcli gen status'
+Or also:
+
+    nmcli gen
 
 
-<a id="org63d3805"></a>
+<a id="org9413e79"></a>
 
 # 4) networking
 
 
-<a id="org4787862"></a>
+<a id="org7a79d71"></a>
 
 ## Switch networking on.
 
     nmcli net on
 
 
-<a id="org0e5de5c"></a>
+<a id="orgc0c9833"></a>
 
 ## Switch networking off.
 
     nmcli net off
 
 
-<a id="orgccd248d"></a>
+<a id="org239c442"></a>
 
 ## Get network connectivity state.
 
@@ -356,26 +406,26 @@ Possible states are:
 -   ***<span class="underline">unknown:</span>*** The connectivity status cannot be found out.
 
 
-<a id="org84b5f2c"></a>
+<a id="orgd11ed78"></a>
 
 # 5) radio
 
 
-<a id="org247bfbd"></a>
+<a id="org2f66c44"></a>
 
 ## Get status of **all** radio switches, or turn them on/off.
 
     nmcli radio all [on | off]
 
 
-<a id="orgde912c1"></a>
+<a id="org47ddf24"></a>
 
 ## Get status of **Wi-Fi** radio switch, or turn it on/off.
 
     nmcli radio wifi [on | off]
 
 
-<a id="orgac2f503"></a>
+<a id="orgec15be4"></a>
 
 ## Get status of **mobile broadband** radio switch, or turn it on/off.
 
